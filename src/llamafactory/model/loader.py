@@ -77,9 +77,9 @@ def load_tokenizer(model_args: "ModelArguments") -> "TokenizerModule":
     init_kwargs = _get_init_kwargs(model_args)
     try:
         tokenizer = AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path,
-            use_fast=model_args.use_fast_tokenizer,
-            split_special_tokens=model_args.split_special_tokens,
+            model_args.model_name_or_path,  # 'Qwen/Qwen3-4B-Instruct-2507'
+            use_fast=model_args.use_fast_tokenizer,  # True
+            split_special_tokens=model_args.split_special_tokens,  # False
             padding_side="right",
             **init_kwargs,
         )
@@ -187,7 +187,7 @@ def load_model(
         patch_model(model, tokenizer, model_args, is_trainable, add_valuehead)
         register_autoclass(config, model, tokenizer)
 
-    model = init_adapter(config, model, model_args, finetuning_args, is_trainable)
+    model = init_adapter(config, model, model_args, finetuning_args, is_trainable)  # lora
 
     if add_valuehead:
         model = AutoModelForCausalLMWithValueHead.from_pretrained(model)

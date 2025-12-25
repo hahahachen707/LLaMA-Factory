@@ -1,0 +1,50 @@
+# ### examples/train_lora/qwen3vl_lora_eval.yaml
+# ### model
+# model_name_or_path: Qwen/Qwen3-VL-4B-Instruct
+# adapter_name_or_path: saves/qwen3vl-4b/lora/sft # 可选项
+
+# ### method
+# finetuning_type: lora
+
+# ### dataset
+# task: rm_think # mmlu_test, ceval_validation, cmmlu_test
+# template: qwen3_vl
+
+# ### output
+# save_dir: saves/qwen3vl-4b/lora/eval
+
+# ### eval
+# batch_size: 4
+
+### eval
+# eval_dataset: rm_think
+# val_size: 0.1
+# per_device_eval_batch_size: 1
+# eval_strategy: steps
+# eval_steps: 500
+
+
+### model
+model_name_or_path:  Qwen/Qwen3-VL-4B-Instruct
+adapter_name_or_path: saves/qwen3vl-4b/lora/sft  # 加载你预训练好的 Adapter
+trust_remote_code: true
+
+### method
+stage: sft
+finetuning_type: lora
+do_train: false  # 关键点：关闭训练
+# do_eval: true    # 关键点：开启评估
+do_predict: true    # 关键点：开启评估
+
+### dataset
+eval_dataset: rm_think_test  # 指定你的评估数据集
+template: qwen3_vl_nothink
+cutoff_len: 2048
+
+### output
+output_dir: saves/qwen3vl-4b/lora/test  # 评估结果保存路径
+overwrite_output_dir: true
+
+### eval
+per_device_eval_batch_size: 4
+predict_with_generate: true  # 如果需要计算 BLEU/ROUGE 等生成指标，设为 true；如果只看 loss/acc，设为 false

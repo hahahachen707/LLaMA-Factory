@@ -46,7 +46,8 @@ def run_sft(
     generating_args: "GeneratingArguments",
     callbacks: Optional[list["TrainerCallback"]] = None,
 ):
-    tokenizer_module = load_tokenizer(model_args)
+    # import ipdb; ipdb.set_trace()
+    tokenizer_module = load_tokenizer(model_args)  # text tokenizer and image processor
     tokenizer = tokenizer_module["tokenizer"]
     template = get_template_and_fix_tokenizer(tokenizer, data_args)
     dataset_module = get_dataset(template, model_args, data_args, training_args, stage="sft", **tokenizer_module)

@@ -181,5 +181,10 @@ def launch():
 
 if __name__ == "__main__":
     from llamafactory.train.tuner import run_exp  # use absolute import
+    try:
+        from llamafactory.safe_conv_patch import apply_patch
+        apply_patch()
+    except ImportError:
+        pass
 
     run_exp()

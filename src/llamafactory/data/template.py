@@ -625,7 +625,7 @@ def get_template_and_fix_tokenizer(tokenizer: "PreTrainedTokenizer", data_args: 
         logger.info_rank0(f"Using default system message: {data_args.default_system}.")
         template.default_system = data_args.default_system
 
-    if isinstance(template, ReasoningTemplate):
+    if isinstance(template, ReasoningTemplate):  # True
         logger.warning_rank0(
             "You are using reasoning template, "
             "please add `_nothink` suffix if the model is not a reasoning model. "

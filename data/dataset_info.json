@@ -38,6 +38,52 @@
       "assistant_tag": "assistant"
     }
   },
+  "rm_think_train": {
+    "file_name": "qa_pairs_5_alpaca_train.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+  "rm_think_eval": {
+    "file_name": "qa_pairs_5_alpaca_eval.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
+
+  "rm_think_test": {
+    "file_name": "qa_pairs_5_alpaca_test.json",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "messages",
+      "images": "images"
+    },
+    "tags": {
+      "role_tag": "role",
+      "content_tag": "content",
+      "user_tag": "user",
+      "assistant_tag": "assistant",
+      "system_tag": "system"
+    }
+  },
   "mllm_audio_demo": {
     "file_name": "mllm_audio_demo.json",
     "formatting": "sharegpt",

@@ -70,7 +70,7 @@ def _load_single_dataset(
     elif dataset_attr.load_from == "cloud_file":
         data_path = dataset_attr.dataset_name
 
-    elif dataset_attr.load_from == "file":
+    elif dataset_attr.load_from == "file":  # json file走这个分支
         data_files = []
         local_path = os.path.join(data_args.dataset_dir, dataset_attr.dataset_name)
         if os.path.isdir(local_path):  # is directory
@@ -139,10 +139,10 @@ def _load_single_dataset(
             num_proc=data_args.preprocessing_num_workers,
             streaming=data_args.streaming and dataset_attr.load_from != "file",
         )
-        if data_args.streaming and dataset_attr.load_from == "file":
+        if data_args.streaming and dataset_attr.load_from == "file":  # F
             dataset = dataset.to_iterable_dataset(num_shards=training_args.dataloader_num_workers)
 
-    if dataset_attr.num_samples is not None and not data_args.streaming:
+    if dataset_attr.num_samples is not None and not data_args.streaming:  # F
         target_num = dataset_attr.num_samples
         indexes = np.random.permutation(len(dataset))[:target_num]  # all samples should be included
         target_num -= len(indexes)
@@ -154,9 +154,9 @@ def _load_single_dataset(
         dataset = dataset.select(indexes)
         logger.info_rank0(f"Sampled {dataset_attr.num_samples} examples from dataset {dataset_attr}.")
 
-    if data_args.max_samples is not None:  # truncate dataset
+    if data_args.max_samples is not None:  # truncate dataset  T
         max_samples = min(data_args.max_samples, len(dataset))
-        dataset = dataset.select(range(max_samples))
+        dataset = dataset.select(range(max_samples))  # 截断数据集
 
     return align_dataset(dataset, dataset_attr, data_args, training_args)
 
@@ -173,14 +173,14 @@ def _get_merged_dataset(
     if dataset_names is None:
         return None
 
-    datasets = {}
+    datasets = {}  # dataset name -> dataset json file
     for dataset_name, dataset_attr in zip(dataset_names, get_dataset_list(dataset_names, data_args.dataset_dir)):
         if (stage == "rm" and dataset_attr.ranking is False) or (stage != "rm" and dataset_attr.ranking is True):
             raise ValueError("The dataset is not applicable in the current training stage.")
-
+        # load dataset关键位置
         datasets[dataset_name] = _load_single_dataset(dataset_attr, model_args, data_args, training_args)
 
-    if return_dict:
+    if return_dict:  # False
         return datasets
     else:
         return merge_dataset(list(datasets.values()), data_args, seed=training_args.seed)
@@ -284,7 +284,7 @@ def get_dataset(
 ) -> "DatasetModule":
     r"""Get the train dataset and optionally gets the evaluation dataset."""
     # Load tokenized dataset if path exists
-    if data_args.tokenized_path is not None:
+    if data_args.tokenized_path is not None:  # False
         if has_tokenized_data(data_args.tokenized_path):
             logger.warning_rank0("Loading dataset from disk will ignore other data arguments.")
             tokenized_data = load_from_disk(data_args.tokenized_path)
@@ -328,7 +328,7 @@ def get_dataset(
         dataset_dict = DatasetDict({**train_dict, **eval_dict})
 
         if data_args.tokenized_path is not None:  # save tokenized dataset to disk
-            if training_args.should_save:
+            if training_args.should_save:  # F
                 dataset_dict.save_to_disk(data_args.tokenized_path)
                 logger.info_rank0(f"Tokenized dataset is saved at {data_args.tokenized_path}.")
                 logger.info_rank0(f"Please launch the training with `tokenized_path: {data_args.tokenized_path}`.")
